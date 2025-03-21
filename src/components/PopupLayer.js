@@ -5,9 +5,7 @@ import { hidePopup } from "../store/popupSlice";
 const PopupLayer = () => {
     console.error("PopupLayer")
     const dispatch = useDispatch();
-    const { isVisible, popupComponent: PopupComponent, popupProps } = useSelector(
-        (state) => state.popup
-    );
+    const { isVisible, popupComponent: PopupComponent, popupProps } = useSelector((state) => state.popup);
 
     if (!isVisible || !PopupComponent) return null;
 

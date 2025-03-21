@@ -1,9 +1,24 @@
 import useUtils from "../utils/util";
-import usePopupHelper from "../utils/popup";
+import {createContext, useContext, useMemo} from "react";
 
-const useCommon = () => ({
-    ...useUtils(),       // util.js의 navigate 관련 함수 통합
-    ...usePopupHelper(), // popup.js의 popup 관련 함수 통합
-});
+const CommonContext = createContext(null);
 
-export default useCommon;
+export const CommonProvider = ({ children }) => {
+    const utils = useUtils();
+
+    const common = useMemo(() => {
+        return {
+            ...utils,
+        };
+    }, [utils]);
+
+    return (
+        <CommonContext.Provider value={{common}}>
+            {children}
+        </CommonContext.Provider>
+    );
+}
+
+export const useCommon = () => {
+    return useContext(CommonContext);
+}

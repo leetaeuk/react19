@@ -7,12 +7,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import Paper from '@mui/material/Paper';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from "@mui/icons-material/Menu";
-import useCommon from "../common/common";
+import { useCommon } from "../providers/CommonProvider";
 
 export default function Footer() {
     const [value, setValue] = React.useState(0);
     const ref = React.useRef(null);
-    const common = useCommon();
+    const { common } = useCommon();
 
     return (
         <Box sx={{ pb: 7 }} ref={ref}>
@@ -35,7 +35,7 @@ export default function Footer() {
                     }}
                 >
                     <BottomNavigationAction
-                        onClick={() => common.navigateBack("/")}
+                        onClick={() => common.locationBack("/")}
                         label="Home"
                         icon={<HomeIcon />}
                     />

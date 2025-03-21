@@ -1,15 +1,17 @@
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import {useLocation, useNavigate} from "react-router-dom";
-import * as history from "../common/history";
+import {hidePopup, showPopup} from "../store/popupSlice";
+import {historyAdd, historyChange, historyRemoveFindSvcId, historyPop} from "../store/historySlice";
+import store from "../store";
 
 const useUtils = () => {
     console.error("useUtils")
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
+    const loc = useLocation();
 
-    const navigateTo = (svcId, paramJson, options, isBack = {}) => {
-        let currentPageId   = location.pathname;
+    const location = (svcId, paramJson, options, isBack = {}) => {
+        let currentPageId   = loc.pathname;
         let isHashChange    = false;
 
         if( options != null )
@@ -31,7 +33,9 @@ const useUtils = () => {
         {
             // 히스토리 변경(현재페이지정보, 이동할페이지정보, 파라미터정보, 옵션)
             // Redux 상태 업데이트와 실제 라우팅을 분리
-            history.change(svcId, paramJson, options);
+            //history.change(svcId, paramJson, options);
+            dispatch(historyChange({ svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
+
             //dispatch(goToPage({ svcId, paramJson }));
             navigate(svcId, paramJson);
         }
@@ -39,7 +43,9 @@ const useUtils = () => {
         else
         {
             // 히스토리 추가(현재페이지정보, 이동할페이지정보, 파라미터정보, 옵션)
-            history.add(currentPageId, svcId, paramJson, options);
+            //history.add(currentPageId, svcId, paramJson, options);
+            dispatch(historyAdd({ currentPageId, svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
+
             //dispatch(goToPage({ svcId, paramJson }));
             navigate(svcId, paramJson);
         }
@@ -50,7 +56,7 @@ const useUtils = () => {
      * @param svcId
      * @param options
      */
-    const navigateBack = (svcId, paramJson, options, isBack = {}) => {
+    const locationBack = (svcId, paramJson, options, isBack = {}) => {
         /*
         let pageInfo = DPT.com.getCurrentPageInfo();
 
@@ -66,11 +72,24 @@ const useUtils = () => {
         if( svcId )
         {
             // 넘겨준 서비스아이디를 찾을때까지 히스토리 array를 search한 후 삭제하고 찾은 정보를 리턴
-            let lastSvcInfo = history.removeFindSvcId(svcId);
+            //let lastSvcInfo = history.removeFindSvcId(svcId);
+            //let lastSvcInfo = dispatch(historyRemoveFindSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
+
+            dispatch(historyRemoveFindSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
+            //console.error(hist)
+            //const lastSvcInfo = (state) => state.history.svcInfo;
+            //const lastSvcInfo = hist.svcInfo;
+            //const lastSvcInfo = {};
+            const hist = store.getState().history;
+            let lastSvcInfo = {};
+            if( hist.arrHistory.length > 0 )
+            {
+                lastSvcInfo = hist.arrHistory[hist.arrHistory.length-1];
+            }
 
             let param = {};
             let opt   = {};
-            if( lastSvcInfo !== null && lastSvcInfo !== undefined )
+            if( lastSvcInfo !== null && lastSvcInfo !== undefined && Object.keys(lastSvcInfo).length > 0 )
             {
                 param = lastSvcInfo.PARAMETER;
                 if( paramJson )
@@ -86,28 +105,37 @@ const useUtils = () => {
             }
 
             // 페이지이동
-            navigateTo(svcId, param, opt, true);
+            location(svcId, param, opt, true);
         }
         // 서비스 아이디가 없는 경우(한단계 이전으로 돌아가는 경우)
         else
         {
             // 히스토리정보가 1개 이상 존재하는 경우
-            if( history.getHistorySize() > 0 )
+            const hist = store.getState().history;
+            const historySize = hist.arrHistory.length;
+            console.error(historySize)
+            if( historySize > 0 )
             {
                 // 맨 마지막 히스토리 1개만 삭제 후 이전페이지 정보 세팅
-                let afterPopSvcInfo = history.pop();
+                dispatch(historyPop());
+
+                let afterPopSvcInfo = {};
+                if( hist.arrHistory.length > 0 )
+                {
+                    afterPopSvcInfo = hist.arrHistory[hist.arrHistory.length-1];
+                }
 
                 // 이전으로 갈 정보가 없으면 메인화면으로 이동처리
-                if( afterPopSvcInfo === null || afterPopSvcInfo === undefined )
+                if( afterPopSvcInfo === null || afterPopSvcInfo === undefined || Object.keys(afterPopSvcInfo).length === 0 )
                 {
                     // 메인페이지 이동
                     //goMain();
-                    navigateTo("/");
+                    location("/");
                 }
                 else
                 {
                     // 이전페이지 이동
-                    navigateTo(afterPopSvcInfo.SVC_ID, afterPopSvcInfo.PARAMETER, afterPopSvcInfo.OPTIONS, true);
+                    location(afterPopSvcInfo.SVC_ID, afterPopSvcInfo.PARAMETER, afterPopSvcInfo.OPTIONS, true);
                 }
             }
             // 히스토리정보가 없는경우는 메인으로 이동
@@ -115,14 +143,22 @@ const useUtils = () => {
             {
                 // 메인페이지 이동
                 //goMain();
-                navigateTo("/");
+                location("/");
             }
         }
     };
+    const openPopup = (component, props = {}) => {
+        dispatch(showPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
+    }
+    const closePopup = () => {
+        dispatch(hidePopup());
+    };
 
     return {
-        navigate: navigateTo,
-        navigateBack: navigateBack,
+        location,
+        locationBack,
+        openPopup,
+        closePopup,
     };
 };
 
