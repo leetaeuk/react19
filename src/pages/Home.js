@@ -16,8 +16,6 @@ const Home = () => {
 
     const submit = useCallback(async () => {
         const response = await common.api.post("/robots.txt", {});
-        console.error(111)
-        console.error(response);
     }, [common]);
     return (
         <>

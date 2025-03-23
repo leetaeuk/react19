@@ -44,7 +44,7 @@ const useApis = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await useApis.get(url, { params });
+            const response = await httpRequest.get(url, { params });
             setLoading(false);
             return response;
         } catch (err) {
@@ -59,7 +59,7 @@ const useApis = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await useApis.post(url, data);
+            const response = await httpRequest.post(url, data);
             setLoading(false);
             return response;
         } catch (err) {
@@ -74,7 +74,7 @@ const useApis = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await useApis.put(url, data);
+            const response = await httpRequest.put(url, data);
             setLoading(false);
             return response;
         } catch (err) {
@@ -89,7 +89,7 @@ const useApis = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await useApis.delete(url);
+            const response = await httpRequest.delete(url);
             setLoading(false);
             return response;
         } catch (err) {
