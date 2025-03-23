@@ -22,4 +22,4 @@ const popupSlice = createSlice({
 });
 
 export const { showPopup, hidePopup } = popupSlice.actions;
-export default popupSlice.reducer;
+export default popupSlice;

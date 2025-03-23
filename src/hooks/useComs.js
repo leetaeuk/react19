@@ -1,11 +1,14 @@
 import {useDispatch} from "react-redux";
 import {useLocation, useNavigate} from "react-router-dom";
-import {hidePopup, showPopup} from "../store/popupSlice";
-import {historyAdd, historyChange, historyRemoveFindSvcId, historyPop} from "../store/historySlice";
+import popupSlice from "../store/popupSlice";
+import historySlice from "../store/historySlice";
+import DialogSlice from "../store/dialogSlice";
+import LayoutSlice from "../store/layoutSlice";
+import GroundPopupSlice from "../store/groundPopupSlice";
 import store from "../store";
 
-const useUtils = () => {
-    console.error("useUtils")
+const useComs = () => {
+    console.error("useComs")
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const loc = useLocation();
@@ -34,7 +37,7 @@ const useUtils = () => {
             // 히스토리 변경(현재페이지정보, 이동할페이지정보, 파라미터정보, 옵션)
             // Redux 상태 업데이트와 실제 라우팅을 분리
             //history.change(svcId, paramJson, options);
-            dispatch(historyChange({ svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
+            dispatch(historySlice.actions.change({ svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
 
             //dispatch(goToPage({ svcId, paramJson }));
             navigate(svcId, paramJson);
@@ -44,7 +47,7 @@ const useUtils = () => {
         {
             // 히스토리 추가(현재페이지정보, 이동할페이지정보, 파라미터정보, 옵션)
             //history.add(currentPageId, svcId, paramJson, options);
-            dispatch(historyAdd({ currentPageId, svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
+            dispatch(historySlice.actions.add({ currentPageId, svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
 
             //dispatch(goToPage({ svcId, paramJson }));
             navigate(svcId, paramJson);
@@ -75,7 +78,7 @@ const useUtils = () => {
             //let lastSvcInfo = history.removeFindSvcId(svcId);
             //let lastSvcInfo = dispatch(historyRemoveFindSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
 
-            dispatch(historyRemoveFindSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
+            dispatch(historySlice.actions.removeToSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
             //console.error(hist)
             //const lastSvcInfo = (state) => state.history.svcInfo;
             //const lastSvcInfo = hist.svcInfo;
@@ -117,7 +120,7 @@ const useUtils = () => {
             if( historySize > 0 )
             {
                 // 맨 마지막 히스토리 1개만 삭제 후 이전페이지 정보 세팅
-                dispatch(historyPop());
+                dispatch(historySlice.actions.pop());
 
                 let afterPopSvcInfo = {};
                 if( hist.arrHistory.length > 0 )
@@ -148,18 +151,42 @@ const useUtils = () => {
         }
     };
     const openPopup = (component, props = {}) => {
-        dispatch(showPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
+        dispatch(popupSlice.actions.showPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
     }
     const closePopup = () => {
-        dispatch(hidePopup());
+        dispatch(popupSlice.actions.hidePopup());
     };
+    const openDialog = (props = {}, component) => {
+        dispatch(DialogSlice.actions.showDialog({ component, props })); // 컴포넌트와 추가 데이터 전달
+    }
+    const closeDialog = () => {
+        dispatch(DialogSlice.actions.hideDialog());
+    };
+    const openGroundPopup = (props = {}, component) => {
+        dispatch(GroundPopupSlice.actions.showGroundPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
+    }
+    const closeGroundPopup = () => {
+        dispatch(GroundPopupSlice.actions.hideGroundPopup());
+    };
+    const setHeader = (props) => {
+        if( props.isShow === undefined )
+        {
+            props.isShow = true;
+        }
+        dispatch(LayoutSlice.actions.headerChange({header: props}));
+    }
 
     return {
         location,
         locationBack,
         openPopup,
         closePopup,
+        openDialog,
+        closeDialog,
+        openGroundPopup,
+        closeGroundPopup,
+        setHeader
     };
 };
 
-export default useUtils;
+export default useComs;

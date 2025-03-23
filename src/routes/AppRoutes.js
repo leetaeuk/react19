@@ -3,18 +3,18 @@ import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
-import { useCommon } from "../providers/CommonProvider";
+import {useCommon} from "../providers/CommonProvider";
 
 const AppRoutes = () => {
     const common = useCommon();
 
     // 뒤로가기 이벤트 캐치
     useEffect(() => {
-        window.addEventListener('popstate', common.navigateBack);
+        window.addEventListener('popstate', common.util.locationBack);
         return () => {
-            window.removeEventListener('popstate', common.navigateBack);
+            window.removeEventListener('popstate', common.util.locationBack);
         }
-    },[]);
+    });
 
     return (
         <Routes>

@@ -1,19 +1,24 @@
-import useUtils from "../utils/util";
+import useApis from "../hooks/useApis";
+import useComs from "../hooks/useComs";
 import {createContext, useContext, useMemo} from "react";
 
 const CommonContext = createContext(null);
 
 export const CommonProvider = ({ children }) => {
-    const utils = useUtils();
+    console.error("CommonProvider")
+    const apis = useApis();
+    const coms = useComs();
 
     const common = useMemo(() => {
         return {
-            ...utils,
+            api  : {...apis},
+            util : {...coms},
         };
-    }, [utils]);
+    }, []);
 
+    console.error("CommonProvider", common)
     return (
-        <CommonContext.Provider value={{common}}>
+        <CommonContext.Provider value={common}>
             {children}
         </CommonContext.Provider>
     );
@@ -21,4 +26,4 @@ export const CommonProvider = ({ children }) => {
 
 export const useCommon = () => {
     return useContext(CommonContext);
-}
+};

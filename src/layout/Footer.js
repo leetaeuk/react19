@@ -7,27 +7,19 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import Paper from '@mui/material/Paper';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from "@mui/icons-material/Menu";
-import { useCommon } from "../providers/CommonProvider";
+import {useCommon} from "../providers/CommonProvider";
+import MenuPopupSample from "../pages/popup/MenuPopupSample";
+import GroundPopupSample from "../pages/groundPopup/GroundPopupSample";
 
 export default function Footer() {
     const [value, setValue] = React.useState(0);
-    const ref = React.useRef(null);
-    const { common } = useCommon();
+    const common = useCommon();
 
     return (
-        <Box sx={{ pb: 7 }} ref={ref}>
+        <Box sx={{ pb: 7 }}>
             <CssBaseline />
             <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, }} elevation={3}>
                 <BottomNavigation
-                    sx={{
-                        '& .MuiBottomNavigationAction-root': {
-                            color: 'primary.gray',
-                            '&.Mui-selected': {
-                                color: '#00C7A9',
-                            }
-                        },
-                        backgroundColor:"#FFFFFF"
-                    }}
                     showLabels
                     value={value}
                     onChange={(event, newValue) => {
@@ -35,12 +27,16 @@ export default function Footer() {
                     }}
                 >
                     <BottomNavigationAction
-                        onClick={() => common.locationBack("/")}
+                        onClick={() => common.util.locationBack("/")}
                         label="Home"
                         icon={<HomeIcon />}
                     />
-                    <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-                    <BottomNavigationAction label="Menu" icon={<MenuIcon />} />
+                    <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} onClick={() =>
+                        common.util.openGroundPopup({ title: "타이틀" }, GroundPopupSample)
+                    }/>
+                    <BottomNavigationAction label="Menu" icon={<MenuIcon />} onClick={() =>
+                        common.util.openPopup(MenuPopupSample, { title: "타이틀" })
+                    }/>
                 </BottomNavigation>
             </Paper>
         </Box>
