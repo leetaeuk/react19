@@ -1,22 +1,20 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Drawer from '@mui/material/Drawer';
-import groundPopupSlice from "../store/groundPopupSlice";
+import {useCommon} from "../providers/CommonProvider";
 
 const GroundPopupLayer = () => {
     console.error("GroundPopupLayer")
-    const dispatch = useDispatch();
+    const common = useCommon();
     const { isVisible, groundPopupComponent: GroundPopupComponent, groundPopupProps } = useSelector((state) => state.groundPopup);
-
-    if (!isVisible || !GroundPopupComponent) return null;
 
     return (
         <Drawer
             anchor="bottom"
             open={isVisible}
-            onClose={() => {dispatch(groundPopupSlice.actions.hideGroundPopup())}}
+            onClose={() => {common.util.closeGroundPopup(null, groundPopupProps)}}
         >
-            <GroundPopupComponent {...groundPopupProps} />
+            {GroundPopupComponent && <GroundPopupComponent {...groundPopupProps} />}
         </Drawer>
     );
 };

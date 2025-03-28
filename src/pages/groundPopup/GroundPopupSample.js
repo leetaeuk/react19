@@ -1,12 +1,12 @@
-import React from "react";
+import React, {memo} from "react";
 import {DialogContentText, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Box from "@mui/material/Box";
 
 
-const GroundPopupSample = ({ name }) => {
-    console.error("GroundPopupSample")
+const GroundPopupSample = memo((props) => {
+    console.error("GroundPopupSample", props)
 
     return (
         <Box
@@ -40,6 +40,6 @@ const GroundPopupSample = ({ name }) => {
             </List>
         </Box>
     );
-};
+});
 
 export default GroundPopupSample;

@@ -1,20 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import dialogSlice from "../store/dialogSlice";
 import Button from "@mui/material/Button";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {useCommon} from "../providers/CommonProvider";
 
 const DialogLayer = () => {
     console.error("DialogLayer")
-    const dispatch = useDispatch();
-    const { isVisible, dialogComponent: DialogComponent, dialogProps } = useSelector((state) => state.dialog);
-
-    if (!isVisible) return null;
+    const common = useCommon();
+    const { isVisible, dialogProps } = useSelector((state) => state.dialog);
 
     return (
         <Dialog
             open={isVisible}
-            onClose={() => {dispatch(dialogSlice.actions.hideDialog())}}
+            onClose={() => { common.util.closeDialog(dialogProps) } }
             scroll="paper"
             sx={{"overflowWrap":"break-word"}}
             aria-labelledby="alert-dialog-title"
@@ -28,8 +26,8 @@ const DialogLayer = () => {
                 <DialogContentText id="alert-dialog-description">{dialogProps.message}</DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => {dispatch(dialogSlice.actions.hideDialog())}}>Disagree</Button>
-                <Button onClick={() => {dispatch(dialogSlice.actions.hideDialog())}} autoFocus>Agree</Button>
+                <Button onClick={() => {common.util.closeDialog(dialogProps)}}>Disagree</Button>
+                <Button onClick={() => {common.util.closeDialog(dialogProps)}} autoFocus>Agree</Button>
             </DialogActions>
         </Dialog>
     );

@@ -1,20 +1,33 @@
 import {useDispatch} from "react-redux";
-import {useLocation, useNavigate} from "react-router-dom";
 import popupSlice from "../store/popupSlice";
 import historySlice from "../store/historySlice";
-import DialogSlice from "../store/dialogSlice";
-import LayoutSlice from "../store/layoutSlice";
-import GroundPopupSlice from "../store/groundPopupSlice";
+import dialogSlice from "../store/dialogSlice";
+import groundPopupSlice from "../store/groundPopupSlice";
 import store from "../store";
+import headerSlice from "../store/headerSlice";
+import loadingSlice from "../store/loadingSlice";
+import footerSlice from "../store/footerSlice";
 
+/**
+ * 공통함수 모음
+ */
 const useComs = () => {
     console.error("useComs")
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const loc = useLocation();
-
+    let navigate = null;
+    const setNavigate = ((nav) => {
+        navigate = nav;
+    });
+    /**
+     * 페이지 이동
+     *  - 페이지 이동시 스택을 하나씩 쌓는다(hostory 개념)
+     * @param svcId
+     * @param paramJson
+     * @param options
+     * @param isBack
+     */
     const location = (svcId, paramJson, options, isBack = {}) => {
-        let currentPageId   = loc.pathname;
+        let currentPageId   = window.location.pathname;
         let isHashChange    = false;
 
         if( options != null )
@@ -55,9 +68,15 @@ const useComs = () => {
     };
 
     /**
-     * 뒤로가기
+     * 뒤로가기시 호출
+     *  - 단순 뒤로가기는 스택을 맨 마지막에서 하나만 제거하고 해당 페이지로 이동
+     *  - 뒤로가기 호출시 특정 페이지를 지정하면 해당 페이지의 아이디를 찾을 때 까지 스택을 제거하고 이동
+     *    해당 페이지 아이디를 못 찾는 경우는 모든 스택을 지우고 홈으로 이동
+     *  - 완료페이지나 전체메뉴 또는 스택을 삭제하면서 페이지 이동이 필요한 경우도 해당 함수를 사용할 것
      * @param svcId
+     * @param paramJson
      * @param options
+     * @param isBack
      */
     const locationBack = (svcId, paramJson, options, isBack = {}) => {
         /*
@@ -75,14 +94,7 @@ const useComs = () => {
         if( svcId )
         {
             // 넘겨준 서비스아이디를 찾을때까지 히스토리 array를 search한 후 삭제하고 찾은 정보를 리턴
-            //let lastSvcInfo = history.removeFindSvcId(svcId);
-            //let lastSvcInfo = dispatch(historyRemoveFindSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
-
             dispatch(historySlice.actions.removeToSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
-            //console.error(hist)
-            //const lastSvcInfo = (state) => state.history.svcInfo;
-            //const lastSvcInfo = hist.svcInfo;
-            //const lastSvcInfo = {};
             const hist = store.getState().history;
             let lastSvcInfo = {};
             if( hist.arrHistory.length > 0 )
@@ -108,7 +120,7 @@ const useComs = () => {
             }
 
             // 페이지이동
-            location(svcId, param, opt, true);
+            location(svcId);
         }
         // 서비스 아이디가 없는 경우(한단계 이전으로 돌아가는 경우)
         else
@@ -116,11 +128,10 @@ const useComs = () => {
             // 히스토리정보가 1개 이상 존재하는 경우
             const hist = store.getState().history;
             const historySize = hist.arrHistory.length;
-            console.error(historySize)
             if( historySize > 0 )
             {
                 // 맨 마지막 히스토리 1개만 삭제 후 이전페이지 정보 세팅
-                dispatch(historySlice.actions.pop());
+                //dispatch(historySlice.actions.pop());
 
                 let afterPopSvcInfo = {};
                 if( hist.arrHistory.length > 0 )
@@ -145,47 +156,93 @@ const useComs = () => {
             else
             {
                 // 메인페이지 이동
-                //goMain();
                 location("/");
             }
         }
     };
+
+    /**
+     * 레이어팝업창 열기
+     * @param component
+     * @param props
+     */
     const openPopup = (component, props = {}) => {
         dispatch(popupSlice.actions.showPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
-    }
-    const closePopup = () => {
-        dispatch(popupSlice.actions.hidePopup());
     };
-    const openDialog = (props = {}, component) => {
-        dispatch(DialogSlice.actions.showDialog({ component, props })); // 컴포넌트와 추가 데이터 전달
-    }
-    const closeDialog = () => {
-        dispatch(DialogSlice.actions.hideDialog());
+
+    /**
+     * 레이어팝업창 닫기
+     * @param props
+     */
+    const closePopup = (props = {}) => {
+        dispatch(popupSlice.actions.hidePopup({ props }));
     };
-    const openGroundPopup = (props = {}, component) => {
-        dispatch(GroundPopupSlice.actions.showGroundPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
-    }
-    const closeGroundPopup = () => {
-        dispatch(GroundPopupSlice.actions.hideGroundPopup());
+
+    /**
+     * 다이얼로그 열기
+     * @param props
+     */
+    const openDialog = (props = {}) => {
+        dispatch(dialogSlice.actions.showDialog({ props })); // 컴포넌트와 추가 데이터 전달
     };
+
+    /**
+     * 다이얼로그 닫기
+     * @param props
+     */
+    const closeDialog = (props = {}) => {
+        dispatch(dialogSlice.actions.hideDialog({ props }));
+    };
+
+    /**
+     * 그라운드팝업 열기
+     * @param component
+     * @param props
+     */
+    const openGroundPopup = (component, props = {}) => {
+        dispatch(groundPopupSlice.actions.showGroundPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
+    };
+
+    /**
+     * 그라운드팝업 닫기
+     * @param component
+     * @param props
+     */
+    const closeGroundPopup = (component, props = {}) => {
+        dispatch(groundPopupSlice.actions.hideGroundPopup({ props }));
+    };
+
+    /**
+     * 상단헤더정보 변경
+     * @param props
+     */
     const setHeader = (props) => {
+        // 상단헤더 노출여부 체크(default : show)
         if( props.isShow === undefined )
         {
             props.isShow = true;
         }
-        dispatch(LayoutSlice.actions.headerChange({header: props}));
-    }
+
+        dispatch(headerSlice.actions.headerChange(props));
+    };
+    const setFooter = (props) => {
+        // 상단헤더 노출여부 체크(default : show)
+        if( props.isShow === undefined )
+        {
+            props.isShow = true;
+        }
+
+        dispatch(footerSlice.actions.footerChange(props));
+    };
+
+    const setLoading = (props) => {
+        dispatch(loadingSlice.actions.loadingChange(props));
+    };
 
     return {
-        location,
-        locationBack,
-        openPopup,
-        closePopup,
-        openDialog,
-        closeDialog,
-        openGroundPopup,
-        closeGroundPopup,
-        setHeader
+        setNavigate,location,locationBack,
+        openPopup,closePopup,openDialog,closeDialog,openGroundPopup,closeGroundPopup,
+        setHeader,setFooter,setLoading
     };
 };
 

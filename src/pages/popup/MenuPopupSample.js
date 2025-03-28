@@ -1,7 +1,7 @@
-import React from "react";
+import React, {memo} from "react";
 import {DialogContentText, Divider} from "@mui/material";
 
-const MenuPopupSample = ({ name }) => {
+const MenuPopupSample = memo((props) => {
     console.error("MenuPopupSample")
 
     return (
@@ -16,6 +16,6 @@ const MenuPopupSample = ({ name }) => {
             <p>자동이체</p>
         </DialogContentText>
     );
-};
+});
 
 export default MenuPopupSample;

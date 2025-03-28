@@ -1,10 +1,10 @@
-import React from "react";
+import React, {memo} from "react";
 import {DialogContentText} from "@mui/material";
 import Button from "@mui/material/Button";
 import {useCommon} from "../../providers/CommonProvider";
 
-const SamplePopup = ({ name }) => {
-    console.error("SamplePopup")
+const PopupSample = memo((props) => {
+    console.error("PopupSample")
     const common = useCommon();
 
     return (
@@ -16,6 +16,6 @@ const SamplePopup = ({ name }) => {
             </Button>
         </DialogContentText>
     );
-};
+});
 
-export default SamplePopup;
+export default PopupSample;

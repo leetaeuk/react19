@@ -7,19 +7,24 @@ import DialogLayer from "./components/./DialogLayer";
 import {CommonProvider} from "./providers/CommonProvider";
 import Layout from "./layout/Layout";
 import GroundPopupLayer from "./components/GroundPopupLayer";
+import Loading from "./components/Loading";
+import NavigatorProvider from "./providers/NavigatorProvider";
 
 
 const App = () => {
     console.error("App");
+
     return (
         <Router>
             <AppProvider>
                 <CommonProvider>
+                    <NavigatorProvider />
                     <Layout>
                         <AppRoutes />
                         <PopupLayer />
                         <DialogLayer />
                         <GroundPopupLayer />
+                        <Loading />
                     </Layout>
                 </CommonProvider>
             </AppProvider>

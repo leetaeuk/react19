@@ -4,8 +4,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import {FormControlLabel, styled, Switch} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {darkTheme, lightTheme} from "../store/themeSlice";
 import Box from "@mui/material/Box";
+import themeSlice from "../store/themeSlice";
+import {memo} from "react";
+import headerSlice from "../store/headerSlice";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -63,44 +65,42 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     },
 }));
 
-export default function Header() {
-    console.error("Header")
+const Header = memo(() => {
+    const { isShow, title } = useSelector((state) => state.header);
+    console.error("Header", isShow)
     const dispatch = useDispatch();
-    const { layout } = useSelector((state) => state.layout);
-    const {themeProps}  = useSelector((state) => state.theme);
-
-    if( !layout.isShow ) return;
-
-    let defaultChecked = "";
-    if( themeProps.palette.isDefaultTheme )
-    {
-        defaultChecked = "defaultChecked";
-    }
+    const { theme } = useSelector((state) => state.theme);
 
     const switchChange = (event) => {
         if(event.target.checked)
         {
-            dispatch(darkTheme())
+            dispatch(themeSlice.actions.darkTheme());
         }
         else
         {
-            dispatch(lightTheme())
+            dispatch(themeSlice.actions.lightTheme());
         }
     }
 
     return (
         <>
-            <AppBar position="fixed">
-                <Toolbar>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        { layout.title }
-                    </Typography>
-                    <FormControlLabel
-                        control={<MaterialUISwitch onChange={switchChange} defaultChecked={defaultChecked} />}
-                    />
-                </Toolbar>
-            </AppBar>
-            <Box sx={{ paddingTop:6 }}></Box>
+            {isShow && (
+                <>
+                    <AppBar position="fixed">
+                        <Toolbar>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                                { title }
+                            </Typography>
+                            <FormControlLabel
+                                control={<MaterialUISwitch onChange={switchChange} checked={theme.palette.isDefaultTheme} />}
+                                label=""
+                            />
+                        </Toolbar>
+                    </AppBar>
+                    <Box sx={{paddingTop:6}}></Box>
+                </>
+            )}
         </>
     );
-}
+});
+export default Header;

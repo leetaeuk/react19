@@ -13,10 +13,10 @@ const popupSlice = createSlice({
             state.popupComponent = action.payload.component; // 컴포넌트 저장
             state.popupProps = action.payload.props || {}; // 추가 데이터 저장
         },
-        hidePopup: (state) => {
+        hidePopup: (state, action) => {
             state.isVisible = false;
-            state.popupComponent = null;
-            state.popupProps = {};
+            //state.popupComponent = null;
+            state.popupProps = action.payload.props || {}; // 추가 데이터 저장
         },
     },
 });

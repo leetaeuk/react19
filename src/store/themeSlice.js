@@ -23,17 +23,17 @@ const whiteTheme = createTheme({
 const themeSlice = createSlice({
     name: "theme",
     initialState: {
-        themeProps: defaultTheme, // íŒì—…ì— ì „ë‹¬í•  ì¶”ê°€ ë°ì´í„° ì €ìž¥
+        theme: defaultTheme, // ÆË¾÷¿¡ Àü´ÞÇÒ Ãß°¡ µ¥ÀÌÅÍ ÀúÀå
     },
     reducers: {
         darkTheme: (state) => {
-            state.themeProps = defaultTheme;
+            state.theme = defaultTheme;
         },
         lightTheme: (state) => {
-            state.themeProps = whiteTheme;
-        }
+            state.theme = whiteTheme;
+        },
     },
 });
 
-export const { darkTheme, lightTheme } = themeSlice.actions;
+export const { themeChange } = themeSlice.actions;
 export default themeSlice;

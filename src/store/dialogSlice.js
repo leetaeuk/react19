@@ -13,10 +13,10 @@ const dialogSlice = createSlice({
             state.dialogComponent = action.payload.component; // 컴포넌트 저장
             state.dialogProps = action.payload.props || {}; // 추가 데이터 저장
         },
-        hideDialog: (state) => {
+        hideDialog: (state, action) => {
             state.isVisible = false;
-            state.dialogComponent = null;
-            state.dialogProps = {};
+            //state.dialogComponent = null;
+            state.dialogProps = action.payload.props || {}; // 추가 데이터 저장
         },
     },
 });

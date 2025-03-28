@@ -1,10 +1,8 @@
-// src/hooks/useApi.js
-import { useState, useCallback } from 'react';
 import axios from 'axios';
+import {useCallback} from 'react';
 
-const BASE_URL = ''; // API의 기본 URL
-
-const httpRequest = axios.create({
+const BASE_URL = ""; // API의 기본 URL
+const HTTP_REQUEST = axios.create({
     baseURL: BASE_URL,
     /*headers: {
         'Content-Type': 'application/json',
@@ -12,12 +10,14 @@ const httpRequest = axios.create({
 });
 
 // 요청 인터셉터 (필요한 경우)
-httpRequest.interceptors.request.use(
+HTTP_REQUEST.interceptors.request.use(
     (config) => {
-        /*const token = localStorage.getItem('token');
+        /*
+        const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
-        }*/
+        }
+        */
         return config;
     },
     (error) => {
@@ -26,7 +26,7 @@ httpRequest.interceptors.request.use(
 );
 
 // 응답 인터셉터 (필요한 경우)
-httpRequest.interceptors.response.use(
+HTTP_REQUEST.interceptors.response.use(
     (response) => {
         return response.data;
     },
@@ -35,77 +35,53 @@ httpRequest.interceptors.response.use(
     }
 );
 
-const useApis = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+/**
+ * api 호출 공통함수
+ */
+const useApis = (util) => {
+    console.error("useApis")
 
-    // GET 요청
+    /**
+     * GET 요청
+     * @type {(function(*, {}=): Promise<axios.AxiosResponse<any>|undefined>)|*}
+     */
     const get = useCallback(async (url, params = {}) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await httpRequest.get(url, { params });
-            setLoading(false);
+        // util.setLoading({isShow:true});
+
+        try
+        {
+            const response = await HTTP_REQUEST.get(url, {params});
+            // util.setLoading({isShow:false});
             return response;
-        } catch (err) {
-            setError(err);
-            setLoading(false);
+        }
+        catch (err)
+        {
+            // util.setLoading({isShow:false});
             throw err;
         }
     }, []);
 
-    // POST 요청
+    /**
+     * POST 요청
+     * @type {(function(*, {}=): Promise<axios.AxiosResponse<any>|undefined>)|*}
+     */
     const post = useCallback(async (url, data = {}) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await httpRequest.post(url, data);
-            setLoading(false);
+        // util.setLoading({isShow:true});
+        try
+        {
+            const response = await HTTP_REQUEST.post(url, data);
+            // util.setLoading({isShow:false});
             return response;
-        } catch (err) {
-            setError(err);
-            setLoading(false);
-            throw err;
         }
-    }, []);
-
-    // PUT 요청
-    const put = useCallback(async (url, data = {}) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await httpRequest.put(url, data);
-            setLoading(false);
-            return response;
-        } catch (err) {
-            setError(err);
-            setLoading(false);
-            throw err;
-        }
-    }, []);
-
-    // DELETE 요청
-    const remove = useCallback(async (url) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await httpRequest.delete(url);
-            setLoading(false);
-            return response;
-        } catch (err) {
-            setError(err);
-            setLoading(false);
-            throw err;
+        catch (err)
+        {
+            // util.openDialog({title:"알림메시지", message:err.message})
+            // util.setLoading({isShow:false});
         }
     }, []);
 
     return {
-        loading,
-        error,
-        get,
-        post,
-        put,
-        remove,
+        get, post
     };
 };
 
