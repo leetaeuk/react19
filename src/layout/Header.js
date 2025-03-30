@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import Box from "@mui/material/Box";
 import themeSlice from "../store/themeSlice";
 import {memo} from "react";
-import headerSlice from "../store/headerSlice";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -88,7 +87,7 @@ const Header = memo(() => {
                 <>
                     <AppBar position="fixed">
                         <Toolbar>
-                            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                            <Typography variant="h6" component="section" sx={{ flexGrow: 1 }}>
                                 { title }
                             </Typography>
                             <FormControlLabel

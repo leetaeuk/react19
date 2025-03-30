@@ -15,25 +15,17 @@ const Contact = () => {
     //console.error(hist.arrHistory)
     useEffect(() => {
         console.warn(JSON.stringify(store.getState().history))
+        common.util.setHeader({isShow:true, title:"Contact"})
+        common.util.setFooter({isShow:true})
     },[]);
 
     return (
-        <Box component="main">
+        <Box component="section">
             <h1>Contact Page</h1>
 
             <Stack direction="row" spacing={1}>
-                <Button variant="contained" color="primary" onClick={() => common.util.location("/InputPage")}>
-                    Go InputPage
-                </Button>
-                <Button variant="contained" color="secondary" onClick={() =>
-                    common.util.openPopup(PopupSample, { title: "타이틀" })
-                }>
-                    Show Popup
-                </Button>
-                <Button variant="outlined" color="error" onClick={() =>
-                    common.util.openDialog( { title: "알림메시지", message: "거래수행 중 오류가 발생하였습니다." })
-                }>
-                    Dialog
+                <Button variant="contained" color="primary" onClick={() => common.util.locationBack("/")}>
+                    Go Home
                 </Button>
             </Stack>
         </Box>

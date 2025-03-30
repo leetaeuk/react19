@@ -12,16 +12,16 @@ const About = () => {
 
     useEffect(() => {
         console.warn(JSON.stringify(store.getState().history))
-        // common.util.setHeader({title:"About 화면입니다."})
-        // common.util.setFooter({isShow:true})
+        common.util.setHeader({isShow:true, title:"About"})
+        common.util.setFooter({isShow:true})
     },[]);
 
     return (
-        <Box component="main">
+        <Box component="section">
             <h1>About Page</h1>
 
             <Stack direction="row" spacing={1}>
-                <Button variant="contained" color="primary" onClick={() => common.util.location("/contact", {state:"1"})}>
+                <Button variant="contained" color="primary" onClick={() => common.util.location("/Contact", {state:"1"})}>
                     Go to Contact
                 </Button>
                 {/*<Button variant="contained" color="secondary" onClick={() =>

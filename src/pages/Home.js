@@ -13,20 +13,21 @@ const Home = () => {
 
     useEffect(() => {
         console.warn(JSON.stringify(store.getState().history))
-        common.util.setHeader({title:"Home 화면입니다."})
+        common.util.setHeader({isShow:true, title:"Home"})
+        common.util.setFooter({isShow:true})
     },[]);
 
     const submit = useCallback(async () => {
         const response = await common.api.post("/robots.txt", {});
-    }, [common]);
+    }, []);
 
     return (
-        <Box component="main">
+        <Box component="section">
             <h1>Home Page</h1>
 
             <Stack direction="row" spacing={1}>
                 <Button variant="contained" color="primary" onClick={() =>
-                    common.util.location("/about", {state:"1"})
+                    common.util.location("/About", {state:"1"})
                 }>
                     Go to About
                 </Button>

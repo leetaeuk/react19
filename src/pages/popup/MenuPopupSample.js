@@ -1,19 +1,19 @@
 import React, {memo} from "react";
-import {DialogContentText, Divider} from "@mui/material";
+import {DialogContentText, Divider, Link} from "@mui/material";
+import {useCommon} from "../../providers/CommonProvider";
 
 const MenuPopupSample = memo((props) => {
     console.error("MenuPopupSample")
+    const common = useCommon();
 
     return (
-        <DialogContentText id="alert-dialog-description" sx={{ padding:2 }}>
-            <Divider textAlign="left">조회/관리</Divider>
-            <p>전체계좌조회</p>
-            <p>입출금 거래내역</p>
-            <Divider textAlign="left">이체</Divider>
-            <p>계좌이체</p>
-            <p>다건이체</p>
-            <p>이체결과조회</p>
-            <p>자동이체</p>
+        <DialogContentText component="section" id="alert-dialog-description" sx={{ padding:2 }}>
+            <Divider textAlign="left">INPUTS</Divider>
+            <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/inputs/TextFieldSample")}}>{"TextField"}</Link></p>
+            <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/inputs/AutocompleteSample")}}>{"Autocomplete"}</Link></p>
+            <Divider textAlign="left">GRID</Divider>
+            <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/layout/GridSample")}}>{"Grid"}</Link></p>
+            <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/layout/ContainerSample")}}>{"Container"}</Link></p>
         </DialogContentText>
     );
 });

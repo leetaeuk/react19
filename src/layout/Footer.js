@@ -16,7 +16,7 @@ import {useSelector} from "react-redux";
 const Footer = memo(() => {
     const { isShow } = useSelector((state) => state.footer);
     console.error("Footer", isShow)
-    const [value, setValue] = React.useState(0);
+    //const [value, setValue] = React.useState(0);
     const common = useCommon();
 
     return (
@@ -27,10 +27,10 @@ const Footer = memo(() => {
                     <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, }} elevation={3}>
                         <BottomNavigation
                             showLabels
-                            value={value}
+                            /*value={value}
                             onChange={(event, newValue) => {
                                 setValue(newValue);
-                            }}
+                            }}*/
                         >
                             <BottomNavigationAction
                                 onClick={() => common.util.locationBack("/")}
