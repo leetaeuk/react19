@@ -1,5 +1,6 @@
 {
-  "name": "react_2025",
+  "homepage": "./",
+  "name": "react19",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,6 +11,7 @@
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.8.4",
     "cra-template": "1.2.0",
+    "framer-motion": "^12.27.1",
     "http-proxy-middleware": "^3.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -21,6 +23,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:dev": "cross-env NODE_ENV=development react-scripts build",
+    "build:prod": "set NODE_ENV=production && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
