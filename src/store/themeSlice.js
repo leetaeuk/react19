@@ -23,7 +23,7 @@ const whiteTheme = createTheme({
 const themeSlice = createSlice({
     name: "theme",
     initialState: {
-        theme: defaultTheme, // 팝업에 전달할 추가 데이터 저장
+        theme: defaultTheme,
     },
     reducers: {
         darkTheme: (state) => {
