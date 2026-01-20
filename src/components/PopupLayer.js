@@ -1,12 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
-import {Dialog, IconButton} from "@mui/material";
+import {Dialog, IconButton, Slide} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import CloseIcon from '@mui/icons-material/Close';
 import {useCommon} from "../providers/CommonProvider";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const PopupLayer = () => {
     console.error("PopupLayer")
@@ -17,6 +21,7 @@ const PopupLayer = () => {
         <Dialog
             fullScreen
             open={isVisible}
+            slots={{transition: Transition}}
             onClose={() => { common.util.closePopup(popupProps) }}
         >
             <AppBar sx={{ position: 'relative' }}>

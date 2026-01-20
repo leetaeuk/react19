@@ -12,11 +12,32 @@ const Layout = memo(({ children }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Header></Header>
-            <Box sx={{ paddingLeft :2,paddingRight :2 }}>
-                { children }
+            <Box
+                sx={{
+                    height: "100vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingLeft:2,
+                    paddingRight:2,
+                }}
+            >
+                {/* Header */}
+                <Header />
+
+                {/* ✅ Content 영역 (슬라이드가 일어나는 곳) */}
+                <Box
+                    sx={{
+                        flex: "1 1 auto",
+                        position: "relative",   // ⭐ 핵심
+                        overflow: "hidden",     // ⭐ 핵심
+                    }}
+                >
+                    {children}
+                </Box>
+
+                {/* Footer */}
+                <Footer />
             </Box>
-            <Footer></Footer>
         </ThemeProvider>
     );
 });

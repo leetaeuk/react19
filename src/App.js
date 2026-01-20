@@ -10,12 +10,13 @@ import GroundPopupLayer from "./components/GroundPopupLayer";
 import Loading from "./components/Loading";
 import NavigatorProvider from "./providers/NavigatorProvider";
 
+const BASE_PATH = process.env.REACT_APP_BASENAME || "/"
 
 const App = () => {
     console.error("App");
 
     return (
-        <Router>
+        <Router basename={BASE_PATH}>
             <AppProvider>
                 <CommonProvider>
                     <NavigatorProvider />

@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { Routes, Route } from "react-router-dom";
+import {Routes, Route, useLocation} from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
@@ -8,10 +8,43 @@ import TextFieldSample from "../pages/inputs/TextFieldSample";
 import AutocompleteSample from "../pages/inputs/AutocompleteSample";
 import GridSample from "../pages/layout/GridSample";
 import ContainerSample from "../pages/layout/ContainerSample";
+import { AnimatePresence, motion } from "framer-motion";
+
+const slideVariants = {
+    initial : (dir) => ({ x: dir === "back" ? "-100%" : "100%", opacity:0}),
+    animate: {x:0, opacity:1},
+    exit: (dir) => ({x: dir === "back" ? "100%" : "-100%", opacity:0})
+}
+
+function SlideWrapper({ children }) {
+    const dir = "forward";
+    return (
+        <motion.div
+            custom={dir}
+            variants={slideVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                zIndex: 1,          // 새 화면이 위로
+            }}
+        >
+            {children}
+        </motion.div>
+    );
+}
+
+
 
 const AppRoutes = () => {
     console.error("AppRoutes")
     const common = useCommon();
+    const location = useLocation(); // ✅ 핵심
 
     // 뒤로가기 이벤트 캐치
     useEffect(() => {
@@ -22,15 +55,18 @@ const AppRoutes = () => {
     },[]);
 
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/About" element={<About />} />
-            <Route path="/Contact" element={<Contact />} />
-            <Route path="/inputs/TextFieldSample" element={<TextFieldSample />} />
-            <Route path="/inputs/AutocompleteSample" element={<AutocompleteSample />} />
-            <Route path="/layout/GridSample" element={<GridSample />} />
-            <Route path="/layout/ContainerSample" element={<ContainerSample />} />
-        </Routes>
+        <AnimatePresence mode="sync">
+            {/* ✅ location 주입 + key 부여 */}
+            <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<SlideWrapper><Home /></SlideWrapper>} />
+                <Route path="/About" element={<SlideWrapper><About /></SlideWrapper>} />
+                <Route path="/Contact" element={<SlideWrapper><Contact /></SlideWrapper>} />
+                <Route path="/inputs/TextFieldSample" element={<SlideWrapper><TextFieldSample /></SlideWrapper>} />
+                <Route path="/inputs/AutocompleteSample" element={<SlideWrapper><AutocompleteSample /></SlideWrapper>} />
+                <Route path="/layout/GridSample" element={<SlideWrapper><GridSample /></SlideWrapper>} />
+                <Route path="/layout/ContainerSample" element={<SlideWrapper><ContainerSample /></SlideWrapper>} />
+            </Routes>
+        </AnimatePresence>
     );
 };
 
