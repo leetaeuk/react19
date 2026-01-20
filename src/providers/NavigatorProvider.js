@@ -8,7 +8,7 @@ const NavigatorProvider = () => {
     const common = useCommon();
     useEffect(() => {
         common.util.setNavigate(navigate);
-    },[common])
+    },[common, navigate])
 
     return null;
 }

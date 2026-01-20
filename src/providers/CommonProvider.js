@@ -15,14 +15,14 @@ export const CommonProvider = React.memo(({ children }) => {
             util : {...coms},
             api  : {...apis},
         };
-    }, []);
+    }, [coms, apis]);
 
     return (
         <CommonContext.Provider value={common}>
             {children}
         </CommonContext.Provider>
     );
-},[])
+})
 
 export const useCommon = () => {
     return useContext(CommonContext)

@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import AppProvider from "./providers/AppProvider";
 import PopupLayer from "./components/PopupLayer";
-import DialogLayer from "./components/./DialogLayer";
+import DialogLayer from "./components/DialogLayer";
 import {CommonProvider} from "./providers/CommonProvider";
 import Layout from "./layout/Layout";
 import GroundPopupLayer from "./components/GroundPopupLayer";
