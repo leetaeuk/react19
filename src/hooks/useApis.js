@@ -39,7 +39,6 @@ HTTP_REQUEST.interceptors.response.use(
  * api 호출 공통함수
  */
 const useApis = (util) => {
-    console.error("useApis")
 
     /**
      * GET 요청
@@ -59,7 +58,7 @@ const useApis = (util) => {
             // util.setLoading({isShow:false});
             throw err;
         }
-    }, []);
+    }, [util]);
 
     /**
      * POST 요청
@@ -77,8 +76,9 @@ const useApis = (util) => {
         {
             // util.openDialog({title:"알림메시지", message:err.message})
             // util.setLoading({isShow:false});
+            throw err;
         }
-    }, []);
+    }, [util]);
 
     return {
         get, post

@@ -1,3 +1,4 @@
+import {useCallback, useRef} from "react";
 import {useDispatch} from "react-redux";
 import popupSlice from "../store/popupSlice";
 import historySlice from "../store/historySlice";
@@ -12,12 +13,11 @@ import footerSlice from "../store/footerSlice";
  * 공통함수 모음
  */
 const useComs = () => {
-    console.error("useComs")
     const dispatch = useDispatch();
-    let navigate = null;
-    const setNavigate = ((nav) => {
-        navigate = nav;
-    });
+    const navigateRef = useRef(null);
+    const setNavigate = useCallback((nav) => {
+        navigateRef.current = nav;
+    }, []);
     /**
      * 페이지 이동
      *  - 페이지 이동시 스택을 하나씩 쌓는다(hostory 개념)
@@ -53,7 +53,9 @@ const useComs = () => {
             dispatch(historySlice.actions.change({ svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
 
             //dispatch(goToPage({ svcId, paramJson }));
-            navigate(svcId, paramJson);
+            if (navigateRef.current) {
+                navigateRef.current(svcId, paramJson);
+            }
         }
         // 정상 location의 경우 히스토리 추가
         else
@@ -63,7 +65,9 @@ const useComs = () => {
             dispatch(historySlice.actions.add({ currentPageId, svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
 
             //dispatch(goToPage({ svcId, paramJson }));
-            navigate(svcId, paramJson);
+            if (navigateRef.current) {
+                navigateRef.current(svcId, paramJson);
+            }
         }
     };
 
