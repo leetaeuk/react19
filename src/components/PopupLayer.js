@@ -42,7 +42,8 @@ const PopupLayer = () => {
                     </Button>
                 </Toolbar>
             </AppBar>
-            {PopupComponent && <PopupComponent {...popupProps} />}
+            {/*{PopupComponent && <PopupComponent {...popupProps} />}*/}
+            {isVisible && PopupComponent && <PopupComponent {...popupProps} />}
         </Dialog>
     );
 };

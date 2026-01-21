@@ -15,7 +15,7 @@ export const CommonProvider = React.memo(({ children }) => {
             util : {...coms},
             api  : {...apis},
         };
-    }, [coms, apis]);
+    }, [apis, coms]);
 
     return (
         <CommonContext.Provider value={common}>

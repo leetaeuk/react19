@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCommon} from "./CommonProvider";
 
@@ -8,7 +8,7 @@ const NavigatorProvider = () => {
     const common = useCommon();
     useEffect(() => {
         common.util.setNavigate(navigate);
-    },[common, navigate])
+    },[common.util, navigate])
 
     return null;
 }

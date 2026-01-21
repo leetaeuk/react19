@@ -3,10 +3,12 @@ import {DialogContentText, Divider, List, ListItem, ListItemButton, ListItemIcon
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Box from "@mui/material/Box";
+import {useCommon} from "../../providers/CommonProvider";
 
 
 const GroundPopupSample = memo((props) => {
     console.error("GroundPopupSample", props)
+    const common = useCommon();
 
     return (
         <Box
@@ -20,7 +22,7 @@ const GroundPopupSample = memo((props) => {
                             <ListItemIcon>
                                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                             </ListItemIcon>
-                            <ListItemText primary={text} />
+                            <ListItemText primary={text} onClick={() => {common.util.closeGroundPopup();}} />
                         </ListItemButton>
                     </ListItem>
                 ))}

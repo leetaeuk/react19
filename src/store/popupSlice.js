@@ -15,7 +15,7 @@ const popupSlice = createSlice({
         },
         hidePopup: (state, action) => {
             state.isVisible = false;
-            //state.popupComponent = null;
+            state.popupComponent = null;
             state.popupProps = action.payload.props || {}; // 추가 데이터 저장
         },
     },

@@ -14,6 +14,8 @@ const MenuPopupSample = memo((props) => {
             <Divider textAlign="left">GRID</Divider>
             <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/layout/GridSample");common.util.closePopup();}}>{"Grid"}</Link></p>
             <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/layout/ContainerSample");common.util.closePopup();}}>{"Container"}</Link></p>
+            <Divider textAlign="left">TEST</Divider>
+            <p><Link color="inherit" component="button" underline="hover" onClick={() => {common.util.locationBack("/UseTest");common.util.closePopup();}}>{"UseTest"}</Link></p>
         </DialogContentText>
     );
 });

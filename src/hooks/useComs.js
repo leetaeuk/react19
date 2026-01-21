@@ -7,6 +7,7 @@ import store from "../store";
 import headerSlice from "../store/headerSlice";
 import loadingSlice from "../store/loadingSlice";
 import footerSlice from "../store/footerSlice";
+import {useCallback, useMemo, useRef} from "react";
 
 /**
  * 공통함수 모음
@@ -14,10 +15,15 @@ import footerSlice from "../store/footerSlice";
 const useComs = () => {
     console.error("useComs")
     const dispatch = useDispatch();
-    let navigate = null;
-    const setNavigate = ((nav) => {
-        navigate = nav;
-    });
+    // let navigate = null;
+    // const setNavigate = ((nav) => {
+    //     navigate = nav;
+    // });
+    const navigateRef = useRef(null);
+    const setNavigate = useCallback((nav) => {
+        navigateRef.current = nav;
+    }, []);
+
     /**
      * 페이지 이동
      *  - 페이지 이동시 스택을 하나씩 쌓는다(hostory 개념)
@@ -26,7 +32,8 @@ const useComs = () => {
      * @param options
      * @param isBack
      */
-    const location = (svcId, paramJson, options, isBack = {}) => {
+    //const location = (svcId, paramJson, options, isBack = {}) => {
+    const location = useCallback((svcId, paramJson, options, isBack = {}) => {
         let currentPageId   = window.location.pathname;
         let isHashChange    = false;
 
@@ -53,7 +60,8 @@ const useComs = () => {
             dispatch(historySlice.actions.change({ svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
 
             //dispatch(goToPage({ svcId, paramJson }));
-            navigate(svcId, paramJson);
+            // navigate(svcId, paramJson);
+            navigateRef.current?.(svcId, paramJson);
         }
         // 정상 location의 경우 히스토리 추가
         else
@@ -63,9 +71,10 @@ const useComs = () => {
             dispatch(historySlice.actions.add({ currentPageId, svcId, paramJson, options })); // 컴포넌트와 추가 데이터 전달
 
             //dispatch(goToPage({ svcId, paramJson }));
-            navigate(svcId, paramJson);
+            //navigate(svcId, paramJson);
+            navigateRef.current?.(svcId, paramJson);
         }
-    };
+    }, [dispatch]);
 
     /**
      * 뒤로가기시 호출
@@ -78,7 +87,8 @@ const useComs = () => {
      * @param options
      * @param isBack
      */
-    const locationBack = (svcId, paramJson, options, isBack = {}) => {
+    //const locationBack = (svcId, paramJson, options, isBack = {}) => {
+    const locationBack = useCallback((svcId, paramJson, options, isBack = {}) => {
         /*
         let pageInfo = DPT.com.getCurrentPageInfo();
 
@@ -159,64 +169,71 @@ const useComs = () => {
                 location("/");
             }
         }
-    };
+    }, [dispatch, location]);
 
     /**
      * 레이어팝업창 열기
      * @param component
      * @param props
      */
-    const openPopup = (component, props = {}) => {
+    //const openPopup = (component, props = {}) => {
+    const openPopup = useCallback((component, props = {}) => {
         dispatch(popupSlice.actions.showPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
-    };
+    }, [dispatch]);
 
     /**
      * 레이어팝업창 닫기
      * @param props
      */
-    const closePopup = (props = {}) => {
+    //const closePopup = (props = {}) => {
+    const closePopup = useCallback((props = {}) => {
         dispatch(popupSlice.actions.hidePopup({ props }));
-    };
+    }, [dispatch]);
 
     /**
      * 다이얼로그 열기
      * @param props
      */
-    const openDialog = (props = {}) => {
+    //const openDialog = (props = {}) => {
+    const openDialog = useCallback((props = {}) => {
         dispatch(dialogSlice.actions.showDialog({ props })); // 컴포넌트와 추가 데이터 전달
-    };
+    }, [dispatch]);
 
     /**
      * 다이얼로그 닫기
      * @param props
      */
-    const closeDialog = (props = {}) => {
+    //const closeDialog = (props = {}) => {
+    const closeDialog = useCallback((props = {}) => {
         dispatch(dialogSlice.actions.hideDialog({ props }));
-    };
+    }, [dispatch]);
 
     /**
      * 그라운드팝업 열기
      * @param component
      * @param props
      */
-    const openGroundPopup = (component, props = {}) => {
+    //const openGroundPopup = (component, props = {}) => {
+    const openGroundPopup = useCallback((component, props = {}) => {
         dispatch(groundPopupSlice.actions.showGroundPopup({ component, props })); // 컴포넌트와 추가 데이터 전달
-    };
+    }, [dispatch]);
 
     /**
      * 그라운드팝업 닫기
      * @param component
      * @param props
      */
-    const closeGroundPopup = (component, props = {}) => {
+    //const closeGroundPopup = (component, props = {}) => {
+    const closeGroundPopup = useCallback((component, props = {}) => {
         dispatch(groundPopupSlice.actions.hideGroundPopup({ props }));
-    };
+    }, [dispatch]);
 
     /**
      * 상단헤더정보 변경
      * @param props
      */
-    const setHeader = (props) => {
+    //const setHeader = (props) => {
+    const setHeader = useCallback((props) => {
         // 상단헤더 노출여부 체크(default : show)
         if( props.isShow === undefined )
         {
@@ -224,8 +241,9 @@ const useComs = () => {
         }
 
         dispatch(headerSlice.actions.headerChange(props));
-    };
-    const setFooter = (props) => {
+    }, [dispatch]);
+    //const setFooter = (props) => {
+    const setFooter = useCallback((props) => {
         // 상단헤더 노출여부 체크(default : show)
         if( props.isShow === undefined )
         {
@@ -233,17 +251,22 @@ const useComs = () => {
         }
 
         dispatch(footerSlice.actions.footerChange(props));
-    };
+    }, [dispatch]);
 
-    const setLoading = (props) => {
+    //const setLoading = (props) => {
+    const setLoading = useCallback((props) => {
         dispatch(loadingSlice.actions.loadingChange(props));
-    };
+    }, [dispatch]);
 
-    return {
+    return useMemo(() => ({
         setNavigate,location,locationBack,
         openPopup,closePopup,openDialog,closeDialog,openGroundPopup,closeGroundPopup,
         setHeader,setFooter,setLoading
-    };
+    }), [
+        setNavigate,location,locationBack,
+        openPopup,closePopup,openDialog,closeDialog,openGroundPopup,closeGroundPopup,
+        setHeader,setFooter,setLoading,
+    ]);
 };
 
 export default useComs;
