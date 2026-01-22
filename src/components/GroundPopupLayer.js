@@ -18,6 +18,7 @@ const GroundPopupLayer = () => {
             open={isVisible}
             onClose={() => {common.util.closeGroundPopup(null, groundPopupProps)}}
             TransitionProps={{ onExited: handleExited }}
+            ModalProps={{ keepMounted: true }}
         >
             {GroundPopupComponent && <GroundPopupComponent {...groundPopupProps} />}
         </Drawer>
