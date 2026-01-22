@@ -13,17 +13,13 @@ const groundPopupSlice = createSlice({
             state.groundPopupComponent = action.payload.component; // 컴포넌트 저장
             state.groundPopupProps = action.payload.props || {}; // 추가 데이터 저장
         },
-        hideGroundPopup: (state, action) => {
+        hideGroundPopup: (state) => {
             state.isVisible = false;
             //state.groundPopupComponent = action.payload.component; // 컴포넌트 저장
             //state.groundPopupProps = action.payload.props || {}; // 추가 데이터 저장
         },
-        clearGroundPopup: (state) => {
-            state.groundPopupComponent = null;
-            state.groundPopupProps = {};
-        },
     },
 });
 
-export const { showGroundPopup, hideGroundPopup, clearGroundPopup } = groundPopupSlice.actions;
+export const { showGroundPopup, hideGroundPopup } = groundPopupSlice.actions;
 export default groundPopupSlice;
