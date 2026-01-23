@@ -20,6 +20,7 @@ const useComs = () => {
     //     navigate = nav;
     // });
     const navigateRef = useRef(null);
+    const navigationDirectionRef = useRef("forward");
     const setNavigate = useCallback((nav) => {
         navigateRef.current = nav;
     }, []);
@@ -36,6 +37,8 @@ const useComs = () => {
     const location = useCallback((svcId, paramJson, options, isBack = {}) => {
         let currentPageId   = window.location.pathname;
         let isHashChange    = false;
+        const skipNavigate = options?.skipNavigate === true;
+        const isBackNavigation = isBack === true;
 
         if( options != null )
         {
@@ -52,7 +55,9 @@ const useComs = () => {
         }
 
         // 뒤로가기로 들어온 경우 히스토리가 존재하면 히스토리값만 변경
-        if( isBack === true )
+        navigationDirectionRef.current = isBackNavigation ? "back" : "forward";
+
+        if( isBackNavigation )
         {
             // 히스토리 변경(현재페이지정보, 이동할페이지정보, 파라미터정보, 옵션)
             // Redux 상태 업데이트와 실제 라우팅을 분리
@@ -61,7 +66,10 @@ const useComs = () => {
 
             //dispatch(goToPage({ svcId, paramJson }));
             // navigate(svcId, paramJson);
-            navigateRef.current?.(svcId, paramJson);
+            if (!skipNavigate)
+            {
+                navigateRef.current?.(svcId, paramJson);
+            }
         }
         // 정상 location의 경우 히스토리 추가
         else
@@ -72,9 +80,17 @@ const useComs = () => {
 
             //dispatch(goToPage({ svcId, paramJson }));
             //navigate(svcId, paramJson);
-            navigateRef.current?.(svcId, paramJson);
+            if (!skipNavigate)
+            {
+                navigateRef.current?.(svcId, paramJson);
+            }
         }
     }, [dispatch]);
+
+    const setNavigationDirection = useCallback((direction) => {
+        navigationDirectionRef.current = direction;
+    }, []);
+    const getNavigationDirection = useCallback(() => navigationDirectionRef.current, []);
 
     /**
      * 뒤로가기시 호출
@@ -127,10 +143,14 @@ const useComs = () => {
                 {
                     opt = options;
                 }
+                if( isBack?.skipNavigate )
+                {
+                    opt = { ...opt, skipNavigate: true };
+                }
             }
 
             // 페이지이동
-            location(svcId);
+            location(svcId, paramJson, opt, true);
         }
         // 서비스 아이디가 없는 경우(한단계 이전으로 돌아가는 경우)
         else
@@ -159,7 +179,8 @@ const useComs = () => {
                 else
                 {
                     // 이전페이지 이동
-                    location(afterPopSvcInfo.SVC_ID, afterPopSvcInfo.PARAMETER, afterPopSvcInfo.OPTIONS, true);
+                    const backOptions = isBack?.skipNavigate ? { ...afterPopSvcInfo.OPTIONS, skipNavigate: true } : afterPopSvcInfo.OPTIONS;
+                    location(afterPopSvcInfo.SVC_ID, afterPopSvcInfo.PARAMETER, backOptions, true);
                 }
             }
             // 히스토리정보가 없는경우는 메인으로 이동
@@ -259,11 +280,11 @@ const useComs = () => {
     }, [dispatch]);
 
     return useMemo(() => ({
-        setNavigate,location,locationBack,
+        setNavigate,location,locationBack,setNavigationDirection,getNavigationDirection,
         openPopup,closePopup,openDialog,closeDialog,openGroundPopup,closeGroundPopup,
         setHeader,setFooter,setLoading
     }), [
-        setNavigate,location,locationBack,
+        setNavigate,location,locationBack,setNavigationDirection,getNavigationDirection,
         openPopup,closePopup,openDialog,closeDialog,openGroundPopup,closeGroundPopup,
         setHeader,setFooter,setLoading,
     ]);

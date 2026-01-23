@@ -15,8 +15,6 @@ const groundPopupSlice = createSlice({
         },
         hideGroundPopup: (state, action) => {
             state.isVisible = false;
-            //state.groundPopupComponent = action.payload.component; // 컴포넌트 저장
-            state.groundPopupProps = action.payload.props || {}; // 추가 데이터 저장
         },
     },
 });
