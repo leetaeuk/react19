@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {Routes, Route, useLocation} from "react-router-dom";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -66,13 +66,19 @@ const AppRoutes = () => {
 
     const common = useCommon();
 
+    const handlePopState = useCallback(() => {
+        common.util.locationBack(undefined, undefined, undefined, { fromPopState: true });
+    }, [common.util]);
+
     // 뒤로가기 이벤트 캐치
     useEffect(() => {
-        window.addEventListener('popstate', common.util.locationBack);
+        //window.addEventListener('popstate', common.util.locationBack);
+        window.addEventListener('popstate', handlePopState);
         return () => {
-            window.removeEventListener('popstate', common.util.locationBack);
+            //window.removeEventListener('popstate', common.util.locationBack);
+            window.removeEventListener('popstate', handlePopState);
         }
-    },[]);
+    },[handlePopState]);
 
     return <AnimatedRoutes />;
 };

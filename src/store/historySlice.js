@@ -14,13 +14,13 @@ const historySlice = createSlice({
                 OPTIONS            : action.payload.options
             });
         },
-        pop: (state, action) => {
+        pop: (state) => {
             state.arrHistory.pop();
 
-            if( state.arrHistory.length > 0 )
+            /*if( state.arrHistory.length > 0 )
             {
                 return state.arrHistory[state.arrHistory.length-1];
-            }
+            }*/
         },
         change: (state, action) => {
             const historySize = state.arrHistory.length;

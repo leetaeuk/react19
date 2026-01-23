@@ -88,7 +88,9 @@ const useComs = () => {
      * @param isBack
      */
     //const locationBack = (svcId, paramJson, options, isBack = {}) => {
-    const locationBack = useCallback((svcId, paramJson, options, isBack = {}) => {
+    //const locationBack = useCallback((svcId, paramJson, options, isBack = {}) => {
+    const locationBack = useCallback((svcId, paramJson, options, navOptions = {}) => {
+        const isPopState = navOptions.fromPopState === true;
         /*
         let pageInfo = DPT.com.getCurrentPageInfo();
 
@@ -105,6 +107,12 @@ const useComs = () => {
         {
             // 넘겨준 서비스아이디를 찾을때까지 히스토리 array를 search한 후 삭제하고 찾은 정보를 리턴
             dispatch(historySlice.actions.removeToSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
+
+            if( isPopState )
+            {
+                return;
+            }
+
             const hist = store.getState().history;
             let lastSvcInfo = {};
             if( hist.arrHistory.length > 0 )
@@ -130,7 +138,7 @@ const useComs = () => {
             }
 
             // 페이지이동
-            location(svcId);
+            location(svcId, param, opt, true);
         }
         // 서비스 아이디가 없는 경우(한단계 이전으로 돌아가는 경우)
         else
@@ -141,12 +149,18 @@ const useComs = () => {
             if( historySize > 0 )
             {
                 // 맨 마지막 히스토리 1개만 삭제 후 이전페이지 정보 세팅
-                dispatch(historySlice.actions.pop());
+                //dispatch(historySlice.actions.pop());
 
                 let afterPopSvcInfo = {};
                 if( hist.arrHistory.length > 0 )
                 {
                     afterPopSvcInfo = hist.arrHistory[hist.arrHistory.length-1];
+                }
+
+                if( isPopState )
+                {
+                    dispatch(historySlice.actions.pop());
+                    return;
                 }
 
                 // 이전으로 갈 정보가 없으면 메인화면으로 이동처리
@@ -165,6 +179,11 @@ const useComs = () => {
             // 히스토리정보가 없는경우는 메인으로 이동
             else
             {
+                if( isPopState )
+                {
+                    return;
+                }
+
                 // 메인페이지 이동
                 location("/", null, null, true);
             }
