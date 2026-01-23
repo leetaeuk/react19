@@ -141,7 +141,7 @@ const useComs = () => {
             if( historySize > 0 )
             {
                 // 맨 마지막 히스토리 1개만 삭제 후 이전페이지 정보 세팅
-                //dispatch(historySlice.actions.pop());
+                dispatch(historySlice.actions.pop());
 
                 let afterPopSvcInfo = {};
                 if( hist.arrHistory.length > 0 )
@@ -154,7 +154,7 @@ const useComs = () => {
                 {
                     // 메인페이지 이동
                     //goMain();
-                    location("/");
+                    location("/", null, null, true);
                 }
                 else
                 {
@@ -166,7 +166,7 @@ const useComs = () => {
             else
             {
                 // 메인페이지 이동
-                location("/");
+                location("/", null, null, true);
             }
         }
     }, [dispatch, location]);
