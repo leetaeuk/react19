@@ -90,7 +90,6 @@ const useComs = () => {
     //const locationBack = (svcId, paramJson, options, isBack = {}) => {
     //const locationBack = useCallback((svcId, paramJson, options, isBack = {}) => {
     const locationBack = useCallback((svcId, paramJson, options, navOptions = {}) => {
-        const isPopState = navOptions.fromPopState === true;
         /*
         let pageInfo = DPT.com.getCurrentPageInfo();
 
@@ -107,11 +106,6 @@ const useComs = () => {
         {
             // 넘겨준 서비스아이디를 찾을때까지 히스토리 array를 search한 후 삭제하고 찾은 정보를 리턴
             dispatch(historySlice.actions.removeToSvcId({ svcId })); // 컴포넌트와 추가 데이터 전달
-
-            if( isPopState )
-            {
-                return;
-            }
 
             const hist = store.getState().history;
             let lastSvcInfo = {};
@@ -144,23 +138,19 @@ const useComs = () => {
         else
         {
             // 히스토리정보가 1개 이상 존재하는 경우
-            const hist = store.getState().history;
+            let hist = store.getState().history;
             const historySize = hist.arrHistory.length;
             if( historySize > 0 )
             {
                 // 맨 마지막 히스토리 1개만 삭제 후 이전페이지 정보 세팅
-                //dispatch(historySlice.actions.pop());
+                dispatch(historySlice.actions.pop());
+                hist = store.getState().history;
 
                 let afterPopSvcInfo = {};
+
                 if( hist.arrHistory.length > 0 )
                 {
                     afterPopSvcInfo = hist.arrHistory[hist.arrHistory.length-1];
-                }
-
-                if( isPopState )
-                {
-                    dispatch(historySlice.actions.pop());
-                    return;
                 }
 
                 // 이전으로 갈 정보가 없으면 메인화면으로 이동처리
@@ -168,7 +158,7 @@ const useComs = () => {
                 {
                     // 메인페이지 이동
                     //goMain();
-                    location("/", null, null, true);
+                    location("/", {}, null, true);
                 }
                 else
                 {
@@ -179,13 +169,8 @@ const useComs = () => {
             // 히스토리정보가 없는경우는 메인으로 이동
             else
             {
-                if( isPopState )
-                {
-                    return;
-                }
-
                 // 메인페이지 이동
-                location("/", null, null, true);
+                location("/", {}, null, true);
             }
         }
     }, [dispatch, location]);

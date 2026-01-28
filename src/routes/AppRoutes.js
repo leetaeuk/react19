@@ -66,19 +66,13 @@ const AppRoutes = () => {
 
     const common = useCommon();
 
-    const handlePopState = useCallback(() => {
-        common.util.locationBack(undefined, undefined, undefined, { fromPopState: true });
-    }, [common.util]);
-
     // 뒤로가기 이벤트 캐치
     useEffect(() => {
-        //window.addEventListener('popstate', common.util.locationBack);
-        window.addEventListener('popstate', handlePopState);
+        window.addEventListener('popstate', common.util.locationBack);
         return () => {
-            //window.removeEventListener('popstate', common.util.locationBack);
-            window.removeEventListener('popstate', handlePopState);
+            window.removeEventListener('popstate', common.util.locationBack);
         }
-    },[handlePopState]);
+    },[]);
 
     return <AnimatedRoutes />;
 };
